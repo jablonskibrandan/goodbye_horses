@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://bct2dflnjewlt"]
+
+[ext_resource type="Texture2D" uid="uid://fryrmgub0gqb" path="res://Sprites/icon.svg" id="1_7s0jb"]
+[ext_resource type="Script" uid="uid://dlnjwnvgsr76a" path="res://Scripts/bar_ui.gd" id="1_c42w0"]
+
+[node name="catch_game" type="Node2D" unique_id=926553982]
+
+[node name="bar_ui" type="Node2D" parent="." unique_id=1065953164]
+script = ExtResource("1_c42w0")
+
+[node name="long_bar" type="Sprite2D" parent="bar_ui" unique_id=1470605866]
+position = Vector2(571, 112)
+scale = Vector2(0.421875, 1.484375)
+texture = ExtResource("1_7s0jb")
+centered = false
+
+[node name="moving_bar" type="Sprite2D" parent="bar_ui" unique_id=1432118663]
+position = Vector2(571, 23)
+scale = Vector2(0.42382792, 0.087890565)
+texture = ExtResource("1_7s0jb")
+centered = false
+
+[node name="aim_bar" type="Sprite2D" parent="bar_ui" unique_id=1296786489]
+position = Vector2(572, 117)
+scale = Vector2(1, 0.07421875)
+texture = ExtResource("1_7s0jb")
+centered = false
