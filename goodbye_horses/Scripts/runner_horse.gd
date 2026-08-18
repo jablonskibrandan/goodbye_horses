@@ -4,11 +4,10 @@ extends CharacterBody2D
 @export var difficulty: int
 var speed
 var move_spots: Array[Vector2] = [
+	Vector2(1028 - 200, 720 - 100),
 	Vector2(1028 - 200, 720 - 200),
-	Vector2(1028 - 200, 200),
-	Vector2(1028 - 600, 720 - 200),
-	Vector2(1028 - 600, 200),
-	Vector2(1080 - 400, 350)
+	Vector2(1028 - 200, 720 - 300),
+	Vector2(1028 - 200, 720 - 400)
 	]
 var run_spot: int
 var target_locked = false
@@ -22,7 +21,7 @@ func _process(delta: float):
 func run_around(delta):
 	if !target_locked:
 		target_locked = true
-		run_spot = randi_range(0, 4)
+		run_spot = randi_range(0, 3)
 	
 	position.x = move_toward(position.x, move_spots[run_spot].x, speed * delta)
 	position.y = move_toward(position.y, move_spots[run_spot].y, speed * delta)

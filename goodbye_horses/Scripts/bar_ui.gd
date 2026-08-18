@@ -10,6 +10,8 @@ var bar_speed = 200
 var error = 15
 var hold = false
 var hit_count = 0
+var catch = false
+var fail = false
 
 func _ready():
 	long_bar = $long_bar
@@ -34,11 +36,13 @@ func _process(delta):
 			if hit_count == 3:
 				print("WIN")
 				hit_count = 0
+				catch = true
 		else:
 			print("MISS")
 			hit_count = 0
 			print(moving_bar.position.y)
 			print(aim_bar.position.y)
+			fail = true
 			reset()
 			
 	if Input.is_key_pressed(KEY_SPACE) == false:

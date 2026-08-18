@@ -8,7 +8,7 @@ size = Vector2(127, 36)
 
 [node name="runner_horse" type="CharacterBody2D" unique_id=211481019]
 script = ExtResource("1_kjkj8")
-difficulty = 10
+difficulty = 5
 
 [node name="runner_sprite" type="Sprite2D" parent="." unique_id=1316340116]
 position = Vector2(0, 4.000002)
