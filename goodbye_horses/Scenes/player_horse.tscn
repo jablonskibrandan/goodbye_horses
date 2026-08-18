@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://b6euvsk1v5imo"]
+
+[ext_resource type="Script" uid="uid://rc2e1d1s0ttp" path="res://Scripts/player_horse.gd" id="1_emlpq"]
+[ext_resource type="Texture2D" uid="uid://fryrmgub0gqb" path="res://Sprites/icon.svg" id="2_mxdu5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4ee2x"]
+size = Vector2(126, 63)
+
+[node name="player_horse" type="CharacterBody2D" unique_id=2085088223]
+script = ExtResource("1_emlpq")
+health = 4
+
+[node name="horse_sprite" type="Sprite2D" parent="." unique_id=2134855871]
+scale = Vector2(1, 0.5)
+texture = ExtResource("2_mxdu5")
+
+[node name="horse_collision" type="CollisionShape2D" parent="." unique_id=1385530138]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_4ee2x")

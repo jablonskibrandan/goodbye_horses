@@ -1,3 +1,17 @@
 [gd_scene format=3 uid="uid://dsi2klrk1nvw3"]
 
+[ext_resource type="Script" uid="uid://w1h5cqbbyr5a" path="res://Scripts/main.gd" id="1_8gbba"]
+[ext_resource type="PackedScene" uid="uid://b6euvsk1v5imo" path="res://Scenes/player_horse.tscn" id="1_bo1nx"]
+[ext_resource type="PackedScene" uid="uid://bct2dflnjewlt" path="res://Scenes/catch_game.tscn" id="1_jjgbg"]
+[ext_resource type="PackedScene" uid="uid://fyl0yw3dwpgy" path="res://Scenes/runner_horse.tscn" id="2_8gbba"]
+
 [node name="main" type="Node2D" unique_id=1174072566]
+script = ExtResource("1_8gbba")
+
+[node name="player_horse" parent="." unique_id=2085088223 instance=ExtResource("1_bo1nx")]
+visible = false
+
+[node name="runner_horse" parent="." unique_id=211481019 instance=ExtResource("2_8gbba")]
+position = Vector2(756, 328)
+
+[node name="catch_game" parent="." unique_id=926553982 instance=ExtResource("1_jjgbg")]

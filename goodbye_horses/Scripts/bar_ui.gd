@@ -3,7 +3,7 @@ extends Node2D
 var long_bar
 var moving_bar
 var aim_bar
-var starting_bar_position = Vector2(640 - 60, 360 - 200)
+var starting_bar_position = Vector2(1028 - 60, 720 - 200)
 var long_bar_height
 var moving_bar_direction = 1
 var bar_speed = 200
