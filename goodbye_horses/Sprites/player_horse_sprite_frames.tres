@@ -1,0 +1,46 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://bulcohs1akykj"]
+
+[ext_resource type="Texture2D" uid="uid://ck46ij27b1lgr" path="res://Sprites/GH-horses.png" id="1_ug7gu"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fqcmn"]
+atlas = ExtResource("1_ug7gu")
+region = Rect2(0, 40, 50, 40)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bcb06"]
+atlas = ExtResource("1_ug7gu")
+region = Rect2(50, 40, 50, 40)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kpd5w"]
+atlas = ExtResource("1_ug7gu")
+region = Rect2(100, 40, 50, 40)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4kjti"]
+atlas = ExtResource("1_ug7gu")
+region = Rect2(150, 40, 50, 40)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i5j6a"]
+atlas = ExtResource("1_ug7gu")
+region = Rect2(200, 40, 50, 40)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fqcmn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bcb06")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kpd5w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4kjti")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i5j6a")
+}],
+"loop": 1,
+"name": &"moving",
+"speed": 9.0
+}]

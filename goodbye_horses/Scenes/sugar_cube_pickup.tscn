@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://dxiemb18wcksb"]
+
+[ext_resource type="Script" uid="uid://drvtn2v8fdm32" path="res://Scripts/pickup.gd" id="1_pickup"]
+[ext_resource type="Texture2D" uid="uid://copebe3cac1b2" path="res://Sprites/icon_01.png" id="2_2xdpp"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sugar"]
+size = Vector2(34, 34)
+
+[node name="SugarCubePickup" type="Area2D" unique_id=1284719234]
+script = ExtResource("1_pickup")
+pickup_type = 2
+item_id = &"sugar_cube"
+speed_boost_multiplier = 1.25
+speed_boost_duration = 4.0
+
+[node name="Cube" type="Polygon2D" parent="." unique_id=1695210480]
+visible = false
+color = Color(0.95, 0.95, 0.9, 1)
+polygon = PackedVector2Array(-16, -12, 7, -18, 17, -9, 16, 13, -7, 19, -17, 10)
+
+[node name="Top" type="Polygon2D" parent="." unique_id=1216786892]
+visible = false
+polygon = PackedVector2Array(-16, -12, 7, -18, 17, -9, -7, -3)
+
+[node name="Side" type="Polygon2D" parent="." unique_id=340576003]
+visible = false
+color = Color(0.82, 0.82, 0.78, 1)
+polygon = PackedVector2Array(17, -9, 16, 13, -7, 19, -7, -3)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=485234104]
+shape = SubResource("RectangleShape2D_sugar")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2097258791]
+scale = Vector2(3, 3)
+texture = ExtResource("2_2xdpp")

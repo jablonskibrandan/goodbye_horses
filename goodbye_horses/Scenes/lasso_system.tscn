@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://bsg20xjhqb56a"]
+
+[ext_resource type="Script" uid="uid://2uc3kdbvugfa" path="res://Scripts/lasso_controller.gd" id="1_controller"]
+[ext_resource type="Script" uid="uid://bc0gndl1cuo02" path="res://Scripts/lasso_head.gd" id="2_head"]
+[ext_resource type="Script" uid="uid://baplywimwdnk6" path="res://Scripts/lasso_power_meter.gd" id="3_meter"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_lasso"]
+radius = 27.0
+
+[node name="LassoSystem" type="Node2D" unique_id=1715817992 node_paths=PackedStringArray("hand_anchor", "rope", "lasso_head", "power_meter")]
+z_index = 20
+script = ExtResource("1_controller")
+rope_segments = 40
+hand_anchor = NodePath("HandAnchor")
+rope = NodePath("Rope")
+lasso_head = NodePath("LassoHead")
+power_meter = NodePath("LassoUI/PowerMeter")
+
+[node name="HandAnchor" type="Marker2D" parent="." unique_id=723272004]
+position = Vector2(56, -12)
+
+[node name="Rope" type="Line2D" parent="." unique_id=1564966319]
+width = 4.0
+default_color = Color(0.784314, 0.639216, 0.415686, 1)
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+antialiased = true
+
+[node name="LassoHead" type="Area2D" parent="." unique_id=1196827351]
+collision_layer = 0
+monitorable = false
+script = ExtResource("2_head")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LassoHead" unique_id=18083587]
+shape = SubResource("CircleShape2D_lasso")
+
+[node name="LassoUI" type="CanvasLayer" parent="." unique_id=918488225]
+layer = 20
+
+[node name="PowerMeter" type="Control" parent="LassoUI" unique_id=1038496686]
+custom_minimum_size = Vector2(360, 56)
+layout_mode = 3
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -180.0
+offset_top = 54.0
+offset_right = 180.0
+offset_bottom = 110.0
+grow_horizontal = 2
+mouse_filter = 2
+script = ExtResource("3_meter")

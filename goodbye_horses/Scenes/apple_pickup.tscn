@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://bid4qtloqkfiu"]
+
+[ext_resource type="Script" uid="uid://drvtn2v8fdm32" path="res://Scripts/pickup.gd" id="1_pickup"]
+[ext_resource type="Texture2D" uid="uid://idvwsavak51i" path="res://Sprites/apple.png" id="2_1ghgr"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_apple"]
+radius = 18.0
+
+[node name="ApplePickup" type="Area2D" unique_id=1485692645]
+script = ExtResource("1_pickup")
+heart_restore_amount = 1
+stamina_restore_amount = 0.0
+
+[node name="Apple" type="Polygon2D" parent="." unique_id=462267828]
+visible = false
+color = Color(0.82, 0.12, 0.12, 1)
+polygon = PackedVector2Array(-16, -8, -10, -17, 0, -20, 10, -17, 16, -8, 15, 7, 8, 17, 0, 20, -8, 17, -15, 7)
+
+[node name="Leaf" type="Polygon2D" parent="." unique_id=1947491431]
+visible = false
+color = Color(0.18, 0.6, 0.2, 1)
+polygon = PackedVector2Array(0, -18, 9, -27, 17, -24, 9, -17)
+
+[node name="Stem" type="Line2D" parent="." unique_id=1804039236]
+visible = false
+points = PackedVector2Array(0, -19, 2, -29)
+width = 3.0
+default_color = Color(0.33, 0.18, 0.08, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=828523135]
+shape = SubResource("CircleShape2D_apple")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1339699207]
+scale = Vector2(3, 3)
+texture = ExtResource("2_1ghgr")

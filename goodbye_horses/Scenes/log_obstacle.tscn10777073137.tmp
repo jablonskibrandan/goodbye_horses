@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://dtd07tfe2f3cy"]
+
+[ext_resource type="Script" uid="uid://c0tnyobh326gg" path="res://Scripts/obstacle.gd" id="1_snc7x"]
+[ext_resource type="Texture2D" uid="uid://dbvs57p1m1d6h" path="res://Sprites/log.png" id="2_l1m5x"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_dmehe"]
+radius = 36.141212
+
+[node name="log_obstacle" type="Area2D" unique_id=1733196665]
+scale = Vector2(0.12, 0.12)
+script = ExtResource("1_snc7x")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=354850356]
+texture_filter = 1
+scale = Vector2(45, 45)
+texture = ExtResource("2_l1m5x")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1567872543]
+rotation = 0.014241791
+scale = Vector2(6.006611, 6.9154806)
+shape = SubResource("CircleShape2D_dmehe")
