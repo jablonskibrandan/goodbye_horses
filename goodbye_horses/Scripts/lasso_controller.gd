@@ -12,6 +12,7 @@ enum State {
 	AIMING_POWER,
 	CASTING,
 	EXTENDED,
+	LATCHED,
 	RETRACTING,
 }
 
@@ -77,6 +78,11 @@ var _cast_progress: float = 0.0
 var _rope_points: Array[Vector2] = []
 var _rope_previous_points: Array[Vector2] = []
 var _current_rope_length: float = 0.0
+var _catch_emitted_this_cast: bool = false
+
+# While latched, the loop follows the exact point on the horse that it touched.
+var _latched_target: Node2D = null
+var _latched_target_local_point: Vector2 = Vector2.ZERO
 
 
 func _ready() -> void:
@@ -87,6 +93,7 @@ func _ready() -> void:
 	if lasso_head != null:
 		lasso_head.visible = false
 		lasso_head.position = _get_rope_origin()
+		lasso_head.monitoring = true
 		lasso_head.body_entered.connect(_on_lasso_head_body_entered)
 		lasso_head.area_entered.connect(_on_lasso_head_area_entered)
 
@@ -115,11 +122,21 @@ func _physics_process(delta: float) -> void:
 			_update_cast(delta)
 		State.EXTENDED:
 			_update_extended(delta)
+		State.LATCHED:
+			_update_latched()
 		State.RETRACTING:
 			_update_retraction(delta)
 
-	if state == State.CASTING or state == State.EXTENDED or state == State.RETRACTING:
+	if (
+		state == State.CASTING
+		or state == State.EXTENDED
+		or state == State.LATCHED
+		or state == State.RETRACTING
+	):
 		_update_rope_physics(delta)
+
+	if state == State.CASTING or state == State.EXTENDED:
+		_check_for_catchable_overlap()
 
 
 func _begin_power_meter() -> void:
@@ -154,6 +171,9 @@ func _lock_power_and_cast() -> void:
 	_cast_elapsed = 0.0
 	_extended_elapsed = 0.0
 	_cast_progress = 0.0
+	_catch_emitted_this_cast = false
+	_latched_target = null
+	_latched_target_local_point = Vector2.ZERO
 	state = State.CASTING
 
 	if lasso_head != null:
@@ -230,6 +250,51 @@ func _update_extended(delta: float) -> void:
 		state = State.RETRACTING
 
 
+
+
+func _update_latched() -> void:
+	if not is_instance_valid(_latched_target):
+		release_latch()
+		return
+
+	# Follow the point on the horse where the loop originally touched it.
+	# Using global coordinates here lets this work even though LassoSystem is
+	# parented under the moving player horse.
+	lasso_head.global_position = _latched_target.to_global(
+		_latched_target_local_point
+	)
+
+
+func _latch_to_target(target: Node2D) -> void:
+	if target == null or lasso_head == null:
+		return
+
+	_latched_target = target
+	_latched_target_local_point = target.to_local(lasso_head.global_position)
+	state = State.LATCHED
+
+	# The catch game can last for several seconds. Keep the loop and rope
+	# visible for that entire time instead of allowing normal auto-retraction.
+	lasso_head.visible = true
+	if rope != null:
+		rope.visible = true
+
+
+func release_latch() -> void:
+	if state != State.LATCHED:
+		return
+
+	_latched_target = null
+	_latched_target_local_point = Vector2.ZERO
+
+	# Once the catch game ends, let the rope visibly retract back to the player.
+	state = State.RETRACTING
+
+
+func is_latched() -> bool:
+	return state == State.LATCHED and is_instance_valid(_latched_target)
+
+
 func _update_retraction(delta: float) -> void:
 	if lasso_head == null:
 		_finish_lasso()
@@ -248,6 +313,8 @@ func _update_retraction(delta: float) -> void:
 func _finish_lasso() -> void:
 	state = State.IDLE
 	_cast_progress = 0.0
+	_latched_target = null
+	_latched_target_local_point = Vector2.ZERO
 	_rope_points.clear()
 	_rope_previous_points.clear()
 	_current_rope_length = 0.0
@@ -377,17 +444,40 @@ func _get_rope_origin() -> Vector2:
 	return hand_anchor.position
 
 
-func _on_lasso_head_body_entered(body: Node2D) -> void:
+func _check_for_catchable_overlap() -> void:
+	if lasso_head == null or _catch_emitted_this_cast:
+		return
+
+	for body in lasso_head.get_overlapping_bodies():
+		_try_emit_catchable(body)
+		if _catch_emitted_this_cast:
+			return
+
+	for area in lasso_head.get_overlapping_areas():
+		_try_emit_catchable(area)
+		if _catch_emitted_this_cast:
+			return
+
+
+func _try_emit_catchable(target: Node) -> void:
+	if _catch_emitted_this_cast:
+		return
+
 	if state != State.CASTING and state != State.EXTENDED:
 		return
 
-	if body.is_in_group(&"lasso_catchable"):
-		catchable_touched.emit(body)
+	if target != null and target.is_in_group(&"lasso_catchable"):
+		_catch_emitted_this_cast = true
+
+		if target is Node2D:
+			_latch_to_target(target as Node2D)
+
+		catchable_touched.emit(target)
+
+
+func _on_lasso_head_body_entered(body: Node2D) -> void:
+	_try_emit_catchable(body)
 
 
 func _on_lasso_head_area_entered(area: Area2D) -> void:
-	if state != State.CASTING and state != State.EXTENDED:
-		return
-
-	if area.is_in_group(&"lasso_catchable"):
-		catchable_touched.emit(area)
+	_try_emit_catchable(area)

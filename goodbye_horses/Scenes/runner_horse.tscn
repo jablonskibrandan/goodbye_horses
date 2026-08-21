@@ -6,7 +6,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4ee2x"]
 size = Vector2(127, 36)
 
-[node name="runner_horse" type="CharacterBody2D" unique_id=211481019]
+[node name="runner_horse" type="CharacterBody2D" unique_id=211481019 groups=["lasso_catchable"]]
 script = ExtResource("1_kjkj8")
 difficulty = 5
 

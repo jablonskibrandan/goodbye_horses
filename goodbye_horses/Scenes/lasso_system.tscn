@@ -5,11 +5,15 @@
 [ext_resource type="Script" uid="uid://baplywimwdnk6" path="res://Scripts/lasso_power_meter.gd" id="3_meter"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_lasso"]
-radius = 27.0
+radius = 34.0
 
 [node name="LassoSystem" type="Node2D" unique_id=1715817992 node_paths=PackedStringArray("hand_anchor", "rope", "lasso_head", "power_meter")]
 z_index = 20
 script = ExtResource("1_controller")
+red_max_cast_distance = 300.0
+yellow_max_cast_distance = 500.0
+maximum_cast_distance = 700.0
+fully_extended_time = 0.45
 rope_segments = 40
 hand_anchor = NodePath("HandAnchor")
 rope = NodePath("Rope")
@@ -29,7 +33,9 @@ antialiased = true
 
 [node name="LassoHead" type="Area2D" parent="." unique_id=1196827351]
 collision_layer = 0
-monitorable = false
+collision_mask = 1
+monitoring = true
+monitorable = true
 script = ExtResource("2_head")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LassoHead" unique_id=18083587]

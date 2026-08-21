@@ -1,16 +1,59 @@
 [gd_scene format=3 uid="uid://dsi2klrk1nvw3"]
 
 [ext_resource type="Script" uid="uid://w1h5cqbbyr5a" path="res://Scripts/main.gd" id="1_8gbba"]
-[ext_resource type="PackedScene" uid="uid://b6euvsk1v5imo" path="res://Scenes/player_horse.tscn" id="1_bo1nx"]
+[ext_resource type="PackedScene" uid="uid://b6euvsk1v5imo" path="res://Scenes/horse_player.tscn" id="1_bo1nx"]
 [ext_resource type="PackedScene" uid="uid://bct2dflnjewlt" path="res://Scenes/catch_game.tscn" id="1_jjgbg"]
 [ext_resource type="PackedScene" uid="uid://fyl0yw3dwpgy" path="res://Scenes/runner_horse.tscn" id="2_8gbba"]
+[ext_resource type="PackedScene" path="res://Scenes/obstacle_spawner.tscn" id="2_kry3j"]
+[ext_resource type="PackedScene" uid="uid://dtd07tfe2f3cy" path="res://Scenes/log_obstacle.tscn" id="3_ynf5e"]
+[ext_resource type="PackedScene" uid="uid://c2teqqudjhl5v" path="res://Scenes/carrot_pickup.tscn" id="4_hptm8"]
+[ext_resource type="PackedScene" path="res://Scenes/pickup_spawner.tscn" id="4_pickup_spawner"]
+[ext_resource type="PackedScene" uid="uid://dxiemb18wcksb" path="res://Scenes/sugar_cube_pickup.tscn" id="5_d1ilt"]
+[ext_resource type="PackedScene" uid="uid://bid4qtloqkfiu" path="res://Scenes/apple_pickup.tscn" id="6_6iyac"]
+[ext_resource type="Script" uid="uid://dmcxowcdrx6d0" path="res://Scripts/health_display.gd" id="7_health_display"]
+[ext_resource type="Texture2D" uid="uid://u58g0vbito4w" path="res://Sprites/hearts_01.png" id="8_four_hearts"]
+[ext_resource type="Texture2D" uid="uid://deohybnsnl3k2" path="res://Sprites/hearts_02.png" id="9_three_hearts"]
+[ext_resource type="Texture2D" uid="uid://kw045q4ncmy" path="res://Sprites/hearts_03.png" id="10_two_hearts"]
+[ext_resource type="Texture2D" uid="uid://dj3wyd2ruvsgf" path="res://Sprites/hearts_04.png" id="11_one_heart"]
 
 [node name="main" type="Node2D" unique_id=1174072566]
 script = ExtResource("1_8gbba")
 
+[node name="ObstacleSpawner" parent="." unique_id=1817670738 node_paths=PackedStringArray("horse") instance=ExtResource("2_kry3j")]
+obstacle_scenes = Array[PackedScene]([ExtResource("3_ynf5e")])
+horse = NodePath("../player_horse")
+minimum_spawn_time = 0.85
+maximum_spawn_time = 1.4
+initial_spawn_delay = 0.5
+
+[node name="PickupSpawner" parent="." unique_id=1786401372 node_paths=PackedStringArray("horse") instance=ExtResource("4_pickup_spawner")]
+pickup_scenes = Array[PackedScene]([ExtResource("4_hptm8"), ExtResource("5_d1ilt"), ExtResource("6_6iyac")])
+horse = NodePath("../player_horse")
+minimum_spawn_time = 3.0
+maximum_spawn_time = 5.5
+
 [node name="player_horse" parent="." unique_id=2085088223 instance=ExtResource("1_bo1nx")]
 
 [node name="runner_horse" parent="." unique_id=211481019 instance=ExtResource("2_8gbba")]
-position = Vector2(756, 328)
+position = Vector2(756, 420)
 
 [node name="catch_game" parent="." unique_id=926553982 instance=ExtResource("1_jjgbg")]
+
+[node name="HealthHUD" type="CanvasLayer" parent="." unique_id=576456468]
+layer = 15
+
+[node name="HealthDisplay" type="TextureRect" parent="HealthHUD" unique_id=1781942580 node_paths=PackedStringArray("player_health")]
+texture_filter = 1
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 156.0
+offset_bottom = 72.0
+scale = Vector2(2.1200032, 2)
+texture = ExtResource("8_four_hearts")
+expand_mode = 1
+script = ExtResource("7_health_display")
+four_hearts_texture = ExtResource("8_four_hearts")
+three_hearts_texture = ExtResource("9_three_hearts")
+two_hearts_texture = ExtResource("10_two_hearts")
+one_heart_texture = ExtResource("11_one_heart")
+player_health = NodePath("../../player_horse/PlayerHealth")
