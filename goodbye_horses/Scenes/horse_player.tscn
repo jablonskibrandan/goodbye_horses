@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://b6euvsk1v5imo"]
+
+[ext_resource type="Script" uid="uid://c174h6qq83xer" path="res://Scripts/character_movement.gd" id="1_8yyqj"]
+[ext_resource type="Texture2D" uid="uid://fryrmgub0gqb" path="res://Sprites/icon.svg" id="1_guxo3"]
+[ext_resource type="PackedScene" uid="uid://bsg20xjhqb56a" path="res://Scenes/lasso_system.tscn" id="3_lasso"]
+[ext_resource type="SpriteFrames" uid="uid://bulcohs1akykj" path="res://Sprites/player_horse_sprite_frames.tres" id="4_331fq"]
+[ext_resource type="Script" uid="uid://cxh3ctiy2ap21" path="res://Scripts/player_health.gd" id="5_health"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4ee2x"]
+size = Vector2(134, 94)
+
+[node name="horse_player" type="CharacterBody2D" unique_id=2085088223 node_paths=PackedStringArray("horse_player_animated_sprite", "visuals")]
+script = ExtResource("1_8yyqj")
+horse_player_animated_sprite = NodePath("AnimatedSprite2D")
+visuals = NodePath("AnimatedSprite2D")
+
+[node name="Visuals" type="Node2D" parent="." unique_id=377318401]
+visible = false
+
+[node name="horse_sprite" type="Sprite2D" parent="Visuals" unique_id=2134855871]
+visible = false
+scale = Vector2(1, 0.5)
+texture = ExtResource("1_guxo3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1385530138]
+position = Vector2(3, 14)
+shape = SubResource("RectangleShape2D_4ee2x")
+
+[node name="LassoSystem" parent="." unique_id=44329589 instance=ExtResource("3_lasso")]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=477131411]
+scale = Vector2(3, 3)
+sprite_frames = ExtResource("4_331fq")
+animation = &"moving"
+frame_progress = 0.7647079
+
+[node name="PlayerHealth" type="Node" parent="." unique_id=1527813260]
+script = ExtResource("5_health")

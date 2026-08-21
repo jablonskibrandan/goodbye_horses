@@ -1,7 +1,8 @@
-[gd_scene format=3 uid="uid://b6euvsk1v5imo"]
+[gd_scene format=3 uid="uid://cc14yc4ro2eh8"]
 
 [ext_resource type="Script" uid="uid://rc2e1d1s0ttp" path="res://Scripts/player_horse.gd" id="1_emlpq"]
 [ext_resource type="Texture2D" uid="uid://fryrmgub0gqb" path="res://Sprites/icon.svg" id="2_mxdu5"]
+[ext_resource type="SpriteFrames" uid="uid://bulcohs1akykj" path="res://Sprites/player_horse_sprite_frames.tres" id="3_mxdu5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4ee2x"]
 size = Vector2(126, 63)
@@ -11,9 +12,15 @@ script = ExtResource("1_emlpq")
 health = 4
 
 [node name="horse_sprite" type="Sprite2D" parent="." unique_id=2134855871]
+visible = false
 scale = Vector2(1, 0.5)
 texture = ExtResource("2_mxdu5")
 
 [node name="horse_collision" type="CollisionShape2D" parent="." unique_id=1385530138]
 position = Vector2(0, -0.5)
 shape = SubResource("RectangleShape2D_4ee2x")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=48877292]
+sprite_frames = ExtResource("3_mxdu5")
+animation = &"moving"
+frame_progress = 0.23099077

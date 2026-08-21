@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://c2teqqudjhl5v"]
+
+[ext_resource type="Script" uid="uid://drvtn2v8fdm32" path="res://Scripts/pickup.gd" id="1_pickup"]
+[ext_resource type="Texture2D" uid="uid://28eqinx25qqp" path="res://Sprites/icon_05.png" id="2_rrakn"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_carrot"]
+radius = 18.0
+
+[node name="CarrotPickup" type="Area2D" unique_id=1924640074]
+script = ExtResource("1_pickup")
+pickup_type = 1
+item_id = &"carrot"
+stamina_restore_amount = 15.0
+
+[node name="Carrot" type="Polygon2D" parent="." unique_id=1152929584]
+visible = false
+color = Color(0.95, 0.4, 0.08, 1)
+polygon = PackedVector2Array(-11, -13, 12, -11, 2, 23)
+
+[node name="LeafLeft" type="Polygon2D" parent="." unique_id=1983799776]
+visible = false
+color = Color(0.18, 0.62, 0.2, 1)
+polygon = PackedVector2Array(-4, -12, -14, -27, -5, -24, 1, -13)
+
+[node name="LeafRight" type="Polygon2D" parent="." unique_id=1048255450]
+visible = false
+color = Color(0.18, 0.62, 0.2, 1)
+polygon = PackedVector2Array(3, -12, 6, -29, 14, -23, 9, -11)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1660050141]
+shape = SubResource("CircleShape2D_carrot")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=389832135]
+scale = Vector2(3, 3)
+texture = ExtResource("2_rrakn")
