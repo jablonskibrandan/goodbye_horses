@@ -2,19 +2,72 @@
 
 [ext_resource type="Texture2D" uid="uid://fryrmgub0gqb" path="res://Sprites/icon.svg" id="1_gjiav"]
 [ext_resource type="Script" uid="uid://djl047vuubv3t" path="res://Scripts/runner_horse.gd" id="1_kjkj8"]
+[ext_resource type="Texture2D" uid="uid://cncx754gor0kr" path="res://Sprites/GH-horses2.png" id="3_lywr8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4ee2x"]
-size = Vector2(127, 36)
+size = Vector2(64.114624, 36)
 
-[node name="runner_horse" type="CharacterBody2D" unique_id=211481019 groups=["lasso_catchable"]]
+[sub_resource type="AtlasTexture" id="AtlasTexture_7unm2"]
+atlas = ExtResource("3_lywr8")
+region = Rect2(0, 159, 75, 53)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qq17d"]
+atlas = ExtResource("3_lywr8")
+region = Rect2(75, 159, 75, 53)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h3f0u"]
+atlas = ExtResource("3_lywr8")
+region = Rect2(150, 159, 75, 53)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jsvcb"]
+atlas = ExtResource("3_lywr8")
+region = Rect2(225, 159, 75, 53)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cr517"]
+atlas = ExtResource("3_lywr8")
+region = Rect2(300, 159, 75, 53)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_dmehe"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7unm2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qq17d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h3f0u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jsvcb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cr517")
+}],
+"loop": 1,
+"name": &"moving",
+"speed": 8.0
+}]
+
+[node name="runner_horse" type="CharacterBody2D" unique_id=211481019 node_paths=PackedStringArray("anim2d") groups=["lasso_catchable"]]
+z_index = 10
 script = ExtResource("1_kjkj8")
-difficulty = 5
+anim2d = NodePath("AnimatedSprite2D")
 
 [node name="runner_sprite" type="Sprite2D" parent="." unique_id=1316340116]
+visible = false
 position = Vector2(0, 4.000002)
 scale = Vector2(1, 0.28125)
 texture = ExtResource("1_gjiav")
 
 [node name="runner_collision" type="CollisionShape2D" parent="." unique_id=1950868664]
-position = Vector2(0.5, 4)
+position = Vector2(3.143622, 3)
+scale = Vector2(1.5552264, 1.6563567)
 shape = SubResource("RectangleShape2D_4ee2x")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=893136309]
+scale = Vector2(3, 3)
+sprite_frames = SubResource("SpriteFrames_dmehe")
+animation = &"moving"
+frame_progress = 0.98790073

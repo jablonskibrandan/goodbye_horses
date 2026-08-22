@@ -1,6 +1,27 @@
 [gd_resource type="SpriteFrames" format=3 uid="uid://bulcohs1akykj"]
 
+[ext_resource type="Texture2D" uid="uid://cncx754gor0kr" path="res://Sprites/GH-horses2.png" id="1_7jfqk"]
 [ext_resource type="Texture2D" uid="uid://ck46ij27b1lgr" path="res://Sprites/GH-horses.png" id="1_ug7gu"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7jfqk"]
+atlas = ExtResource("1_7jfqk")
+region = Rect2(4, 96, 54, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tx4ox"]
+atlas = ExtResource("1_7jfqk")
+region = Rect2(58, 96, 54, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o13jg"]
+atlas = ExtResource("1_7jfqk")
+region = Rect2(112, 96, 54, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vr5f1"]
+atlas = ExtResource("1_7jfqk")
+region = Rect2(166, 96, 54, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xedfo"]
+atlas = ExtResource("1_7jfqk")
+region = Rect2(220, 96, 54, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fqcmn"]
 atlas = ExtResource("1_ug7gu")
@@ -24,6 +45,26 @@ region = Rect2(200, 40, 50, 40)
 
 [resource]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7jfqk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tx4ox")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o13jg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vr5f1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xedfo")
+}],
+"loop": 0,
+"name": &"jump",
+"speed": 8.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_fqcmn")

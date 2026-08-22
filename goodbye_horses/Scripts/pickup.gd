@@ -25,9 +25,6 @@ enum PickupType {
 
 
 @export_category("Immediate Effects")
-## Keep this enabled for the current arcade prototype. If you later want the
-## cowboy pouch to store food instead, disable this on the pickup scene and
-## listen to Horse.pickup_collected to put the item into an inventory.
 @export var auto_use_on_collect: bool = true
 @export var heart_restore_amount: int = 0
 @export var stamina_restore_amount: float = 0.0
@@ -60,11 +57,18 @@ func _on_body_entered(body: Node2D) -> void:
 	if not body is Horse:
 		return
 
-	_has_been_collected = true
 	var horse := body as Horse
 
-	if auto_use_on_collect:
-		_apply_immediate_effect(horse)
+	if pickup_type == PickupType.SUGAR_CUBE:
+		if not horse.add_sugar_cubes(quantity):
+			# Inventory is full. Leave the pickup in the world instead of
+			# wasting it.
+			return
+	else:
+		if auto_use_on_collect:
+			_apply_immediate_effect(horse)
+
+	_has_been_collected = true
 
 	horse.register_pickup(item_id, quantity)
 	collected.emit(self, horse)

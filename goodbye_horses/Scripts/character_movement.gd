@@ -14,6 +14,13 @@ signal pickup_collected(
 	quantity: int
 )
 
+signal sugar_cubes_changed(
+	current_amount: int,
+	maximum_amount: int
+)
+
+signal intro_arrived
+
 
 @export var horse_player_animated_sprite: AnimatedSprite2D
 
@@ -25,6 +32,12 @@ signal pickup_collected(
 @export var maximum_stamina: float = 100.0
 
 @export var stamina_drain_per_second: float = 2.0
+
+
+@export_category("Sugar Cube Lures")
+
+@export_range(1, 10, 1)
+var maximum_sugar_cubes: int = 3
 
 
 @export_category("Movement Bounds")
@@ -41,6 +54,12 @@ signal pickup_collected(
 	24.0,
 	24.0
 )
+
+
+@export_category("Intro")
+
+## Distance at which the scripted entrance snaps to its target point.
+@export var intro_arrival_distance: float = 2.0
 
 
 @export_category("Jump")
@@ -82,6 +101,7 @@ var hit_flash_alpha: float = 0.25
 
 
 var current_stamina: float
+var sugar_cubes: int = 0
 
 var is_jumping: bool = false
 
@@ -93,7 +113,6 @@ var _visuals_start_position: Vector2
 var _exhaustion_emitted: bool = false
 
 
-# Hit reaction.
 var _hit_slow_timer: float = 0.0
 
 var _hit_flash_timer: float = 0.0
@@ -103,6 +122,15 @@ var _hit_flash_step_timer: float = 0.0
 var _flash_dimmed: bool = false
 
 var _normal_sprite_modulate: Color = Color.WHITE
+
+
+var controls_enabled: bool = true
+var stamina_drain_enabled: bool = true
+
+var _intro_active: bool = false
+var _intro_waiting: bool = false
+var _intro_target_global_position: Vector2 = Vector2.ZERO
+var _intro_speed: float = 0.0
 
 
 func _ready() -> void:
@@ -132,10 +160,25 @@ func _ready() -> void:
 		maximum_stamina
 	)
 
+	sugar_cubes_changed.emit(
+		sugar_cubes,
+		maximum_sugar_cubes
+	)
+
 
 func _physics_process(
 	delta: float
 ) -> void:
+	# While waiting for its cue, keep the player parked off-screen and do not
+	# apply the normal gameplay movement bounds.
+	if _intro_waiting:
+		velocity = Vector2.ZERO
+		return
+
+	if _intro_active:
+		_update_intro(delta)
+		return
+
 	_handle_hit_reaction(delta)
 
 	_handle_movement()
@@ -150,11 +193,64 @@ func _physics_process(
 
 
 # ============================================================
+# INTRO CUTSCENE
+# ============================================================
+
+
+func prepare_intro(start_global_position: Vector2) -> void:
+	global_position = start_global_position
+	_intro_active = false
+	_intro_waiting = true
+	velocity = Vector2.ZERO
+
+	if horse_player_animated_sprite != null:
+		horse_player_animated_sprite.play("moving")
+
+
+func start_intro(
+	start_global_position: Vector2,
+	target_global_position: Vector2,
+	intro_speed: float
+) -> void:
+	global_position = start_global_position
+	_intro_target_global_position = target_global_position
+	_intro_speed = maxf(intro_speed, 1.0)
+	_intro_waiting = false
+	_intro_active = true
+	velocity = Vector2.ZERO
+
+	if horse_player_animated_sprite != null:
+		horse_player_animated_sprite.play("moving")
+
+
+func _update_intro(delta: float) -> void:
+	global_position = global_position.move_toward(
+		_intro_target_global_position,
+		_intro_speed * delta
+	)
+
+	if global_position.distance_to(
+		_intro_target_global_position
+	) > intro_arrival_distance:
+		return
+
+	global_position = _intro_target_global_position
+	_intro_active = false
+	_intro_waiting = false
+	velocity = Vector2.ZERO
+	intro_arrived.emit()
+
+
+# ============================================================
 # MOVEMENT
 # ============================================================
 
 
 func _handle_movement() -> void:
+	if not controls_enabled:
+		velocity = Vector2.ZERO
+		return
+
 	var direction := Input.get_vector(
 		"move_left",
 		"move_right",
@@ -246,7 +342,6 @@ func _handle_hit_reaction(
 			_flash_dimmed
 		)
 
-	# Flash finished.
 	if _hit_flash_timer <= 0.0:
 		_flash_dimmed = false
 
@@ -285,7 +380,8 @@ func _handle_jump(
 	delta: float
 ) -> void:
 	if (
-		Input.is_action_just_pressed(
+		controls_enabled
+		and Input.is_action_just_pressed(
 			"jump"
 		)
 		and not is_jumping
@@ -324,19 +420,22 @@ func _handle_jump(
 
 func _start_jump() -> void:
 	is_jumping = true
-
 	_jump_timer = 0.0
 
+	if horse_player_animated_sprite != null:
+		horse_player_animated_sprite.play("jump")
 
 func _finish_jump() -> void:
 	is_jumping = false
-
 	_jump_timer = 0.0
 
 	if visuals != null:
 		visuals.position = (
 			_visuals_start_position
 		)
+
+	if horse_player_animated_sprite != null:
+		horse_player_animated_sprite.play("moving")
 
 
 # ============================================================
@@ -347,6 +446,9 @@ func _finish_jump() -> void:
 func _handle_stamina(
 	delta: float
 ) -> void:
+	if not stamina_drain_enabled:
+		return
+
 	if current_stamina <= 0.0:
 		if not _exhaustion_emitted:
 			_exhaustion_emitted = true
@@ -367,6 +469,10 @@ func _handle_stamina(
 		maximum_stamina
 	)
 
+	if current_stamina <= 0.0 and not _exhaustion_emitted:
+		_exhaustion_emitted = true
+		horse_exhausted.emit()
+
 
 func restore_stamina(
 	amount: float
@@ -385,6 +491,22 @@ func restore_stamina(
 		current_stamina,
 		maximum_stamina
 	)
+
+
+# ============================================================
+# LEVEL CONTROL
+# ============================================================
+
+
+func set_controls_enabled(enabled: bool) -> void:
+	controls_enabled = enabled
+
+	if not controls_enabled:
+		velocity = Vector2.ZERO
+
+
+func set_stamina_drain_enabled(enabled: bool) -> void:
+	stamina_drain_enabled = enabled
 
 
 # ============================================================
@@ -429,6 +551,55 @@ func is_at_full_health() -> bool:
 	return (
 		player_health.is_at_full_health()
 	)
+
+
+# ============================================================
+# SUGAR CUBE LURES
+# ============================================================
+
+
+func add_sugar_cubes(amount: int = 1) -> bool:
+	if amount <= 0:
+		return false
+
+	if sugar_cubes >= maximum_sugar_cubes:
+		return false
+
+	var previous_amount := sugar_cubes
+
+	sugar_cubes = clampi(
+		sugar_cubes + amount,
+		0,
+		maximum_sugar_cubes
+	)
+
+	if sugar_cubes == previous_amount:
+		return false
+
+	sugar_cubes_changed.emit(
+		sugar_cubes,
+		maximum_sugar_cubes
+	)
+
+	return true
+
+
+func use_sugar_cube() -> bool:
+	if sugar_cubes <= 0:
+		return false
+
+	sugar_cubes -= 1
+
+	sugar_cubes_changed.emit(
+		sugar_cubes,
+		maximum_sugar_cubes
+	)
+
+	return true
+
+
+func is_sugar_cube_inventory_full() -> bool:
+	return sugar_cubes >= maximum_sugar_cubes
 
 
 # ============================================================

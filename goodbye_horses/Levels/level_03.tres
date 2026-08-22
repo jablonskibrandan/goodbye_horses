@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="LevelDefinition" format=3 uid="uid://djnb0n5rhvcd5"]
+
+[ext_resource type="Script" uid="uid://c8bpi40f1am4b" path="res://Scripts/level_definition.gd" id="1_level"]
+
+[resource]
+script = ExtResource("1_level")
+level_name = "Level 3"
+world_speed = 425.0
+runner_difficulty = 11
+stamina_drain_per_second = 3.0
+obstacle_minimum_spawn_time = 0.95
+obstacle_maximum_spawn_time = 1.6
+obstacle_initial_delay = 0.7
+pickup_minimum_spawn_time = 3.1
+pickup_maximum_spawn_time = 5.4

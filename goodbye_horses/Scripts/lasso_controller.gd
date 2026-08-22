@@ -80,9 +80,10 @@ var _rope_previous_points: Array[Vector2] = []
 var _current_rope_length: float = 0.0
 var _catch_emitted_this_cast: bool = false
 
-# While latched, the loop follows the exact point on the horse that it touched.
+## While latched, the loop follows the exact point on the horse that it touched. 
 var _latched_target: Node2D = null
 var _latched_target_local_point: Vector2 = Vector2.ZERO
+var _input_enabled: bool = true
 
 
 func _ready() -> void:
@@ -102,6 +103,9 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if not _input_enabled:
+		return
+
 	if not event.is_action_pressed(lasso_action):
 		return
 
@@ -154,8 +158,8 @@ func _lock_power_and_cast() -> void:
 
 	locked_power = clampf(power_meter.lock_power(), 0.0, 1.0)
 
-	# The exact position where the player stops the meter determines the distance.
-	# The color zones simply divide that continuous range into readable bands.
+	## The exact position where the player stops the meter determines the distance.
+	## The color zones simply divide that continuous range into readable bands.
 	_cast_distance = _get_distance_from_meter(locked_power)
 	_cast_duration = lerpf(
 		minimum_cast_duration,
@@ -229,9 +233,7 @@ func _update_cast(delta: float) -> void:
 	var origin := _get_rope_origin()
 	var landing := origin + Vector2(_cast_distance, landing_drop)
 
-	# A simple projectile-style parabola. It starts at the hand, rises, then
-	# falls into the landing point. Unlike the previous sine/spline combination,
-	# this reads as a thrown object instead of a point sliding along a curve.
+	## A simple projectile-style parabola. 
 	var t := _cast_progress
 	var position_on_line := origin.lerp(landing, t)
 	var arc_offset := -4.0 * _cast_arc_height * t * (1.0 - t)
@@ -257,9 +259,9 @@ func _update_latched() -> void:
 		release_latch()
 		return
 
-	# Follow the point on the horse where the loop originally touched it.
-	# Using global coordinates here lets this work even though LassoSystem is
-	# parented under the moving player horse.
+	## Follow the point on the horse where the loop originally touched it.
+	## Using global coordinates here lets this work even though LassoSystem is
+	## parented under the moving player horse.
 	lasso_head.global_position = _latched_target.to_global(
 		_latched_target_local_point
 	)
@@ -273,8 +275,8 @@ func _latch_to_target(target: Node2D) -> void:
 	_latched_target_local_point = target.to_local(lasso_head.global_position)
 	state = State.LATCHED
 
-	# The catch game can last for several seconds. Keep the loop and rope
-	# visible for that entire time instead of allowing normal auto-retraction.
+	## The catch game can last for several seconds. Keep the loop and rope
+	## visible for that entire time instead of allowing normal auto-retraction.
 	lasso_head.visible = true
 	if rope != null:
 		rope.visible = true
@@ -287,8 +289,32 @@ func release_latch() -> void:
 	_latched_target = null
 	_latched_target_local_point = Vector2.ZERO
 
-	# Once the catch game ends, let the rope visibly retract back to the player.
+	## Once the catch game ends, let the rope visibly retract back to the player.
 	state = State.RETRACTING
+
+
+func cancel_and_retract() -> void:
+	if power_meter != null:
+		power_meter.cancel_meter()
+
+	match state:
+		State.IDLE:
+			return
+		State.AIMING_POWER:
+			_finish_lasso()
+		State.CASTING, State.EXTENDED, State.LATCHED:
+			_latched_target = null
+			_latched_target_local_point = Vector2.ZERO
+			state = State.RETRACTING
+		State.RETRACTING:
+			pass
+
+
+func set_enabled(enabled: bool) -> void:
+	_input_enabled = enabled
+
+	if not enabled:
+		cancel_and_retract()
 
 
 func is_latched() -> bool:
@@ -358,9 +384,7 @@ func _update_rope_physics(delta: float) -> void:
 	var finish := lasso_head.position
 	var straight_distance := start.distance_to(finish)
 
-	# Pay rope out as the loop travels. At full extension it is only slightly
-	# longer than the straight-line distance, which gives a believable hanging
-	# rope instead of an exaggerated U-shape.
+
 	var desired_slack := extra_full_extension_slack * _get_extension_ratio()
 	var desired_length := (
 		straight_distance * rope_slack_multiplier

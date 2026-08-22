@@ -10,8 +10,7 @@ size = Vector2(34, 34)
 script = ExtResource("1_pickup")
 pickup_type = 2
 item_id = &"sugar_cube"
-speed_boost_multiplier = 1.25
-speed_boost_duration = 4.0
+auto_use_on_collect = false
 
 [node name="Cube" type="Polygon2D" parent="." unique_id=1695210480]
 visible = false

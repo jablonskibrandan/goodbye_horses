@@ -10,6 +10,7 @@
 size = Vector2(134, 94)
 
 [node name="horse_player" type="CharacterBody2D" unique_id=2085088223 node_paths=PackedStringArray("horse_player_animated_sprite", "visuals")]
+z_index = 10
 script = ExtResource("1_8yyqj")
 horse_player_animated_sprite = NodePath("AnimatedSprite2D")
 visuals = NodePath("AnimatedSprite2D")
@@ -31,8 +32,8 @@ shape = SubResource("RectangleShape2D_4ee2x")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=477131411]
 scale = Vector2(3, 3)
 sprite_frames = ExtResource("4_331fq")
-animation = &"moving"
-frame_progress = 0.7647079
+animation = &"jump"
+frame_progress = 1.0
 
 [node name="PlayerHealth" type="Node" parent="." unique_id=1527813260]
 script = ExtResource("5_health")

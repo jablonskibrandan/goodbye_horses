@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="LevelDefinition" format=3 uid="uid://dx00ohiwqgpp8"]
+
+[ext_resource type="Script" uid="uid://c8bpi40f1am4b" path="res://Scripts/level_definition.gd" id="1_level"]
+
+[resource]
+script = ExtResource("1_level")
+level_name = "Level 2"
+world_speed = 375.0
+runner_difficulty = 9
+obstacle_minimum_spawn_time = 1.05
+obstacle_maximum_spawn_time = 1.8
+obstacle_initial_delay = 0.75
+pickup_maximum_spawn_time = 5.2
+pickup_initial_delay = 1.9
+sugar_cube_base_weight = 1.05
+sugar_cube_difficulty_decay = 0.74

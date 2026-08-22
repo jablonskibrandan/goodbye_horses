@@ -79,6 +79,32 @@ func take_damage(amount: int = 1) -> void:
 		_die()
 
 
+func lose_heart(amount: int = 1) -> void:
+	## Used for rule-based penalties such as failing the catch minigame.
+	## Unlike take_damage(), this intentionally ignores the temporary
+	## invulnerability window from obstacle hits.
+	if is_dead:
+		return
+
+	if amount <= 0:
+		return
+
+	current_hearts = clampi(
+		current_hearts - amount,
+		0,
+		max_hearts
+	)
+
+	damaged.emit(amount)
+	health_changed.emit(
+		current_hearts,
+		max_hearts
+	)
+
+	if current_hearts <= 0:
+		_die()
+
+
 func heal(amount: int = 1) -> void:
 	if is_dead:
 		return

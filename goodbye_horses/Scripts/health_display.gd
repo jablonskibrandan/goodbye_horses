@@ -26,7 +26,7 @@ func _ready() -> void:
 		_on_health_changed
 	)
 
-	# Set the correct image immediately.
+	## Set the correct image immediately.
 	_on_health_changed(
 		player_health.current_hearts,
 		player_health.max_hearts
@@ -51,6 +51,6 @@ func _on_health_changed(
 			texture = one_heart_texture
 
 		0:
-			# Game over should be happening here,
-			# so just leave the final texture visible.
+			## Game over should be happening here,
+			## so just leave the final texture visible.
 			texture = one_heart_texture

@@ -14,16 +14,20 @@ extends Node2D
 @export var minimum_spawn_time: float = 1.0
 @export var maximum_spawn_time: float = 2.25
 @export var initial_spawn_delay: float = 1.0
+@export var auto_start: bool = false
 
 ## Extra distance beyond the right edge of the viewport.
 @export var spawn_x_offset: float = 75.0
 
 ## Keeps spawned objects slightly away from the exact top/bottom of the
-## horse movement lane. Set to 0 if you want the full lane used.
+## horse movement lane. Set to 0 if we want the full lane used.
 @export var vertical_spawn_padding: float = 0.0
 
 
 @onready var spawn_timer: Timer = $SpawnTimer
+
+
+var _spawning: bool = false
 
 
 func _ready() -> void:
@@ -37,11 +41,33 @@ func _ready() -> void:
 		push_error("ObstacleSpawner needs the player Horse assigned.")
 		return
 
+	if auto_start:
+		start_spawning()
+
+
+func start_spawning() -> void:
+	if obstacle_scenes.is_empty() or horse == null:
+		return
+
+	_spawning = true
+	spawn_timer.stop()
 	spawn_timer.wait_time = maxf(initial_spawn_delay, 0.01)
 	spawn_timer.start()
 
 
+func stop_spawning() -> void:
+	_spawning = false
+	spawn_timer.stop()
+
+
+func is_spawning() -> bool:
+	return _spawning
+
+
 func _on_spawn_timer_timeout() -> void:
+	if not _spawning:
+		return
+
 	_spawn_obstacle()
 	_schedule_next_spawn()
 
@@ -78,6 +104,9 @@ func _spawn_obstacle() -> void:
 
 
 func _schedule_next_spawn() -> void:
+	if not _spawning:
+		return
+
 	spawn_timer.wait_time = randf_range(
 		minimum_spawn_time,
 		maxf(maximum_spawn_time, minimum_spawn_time)

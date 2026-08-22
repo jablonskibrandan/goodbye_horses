@@ -15,9 +15,12 @@
 [ext_resource type="Texture2D" uid="uid://deohybnsnl3k2" path="res://Sprites/hearts_02.png" id="9_three_hearts"]
 [ext_resource type="Texture2D" uid="uid://kw045q4ncmy" path="res://Sprites/hearts_03.png" id="10_two_hearts"]
 [ext_resource type="Texture2D" uid="uid://dj3wyd2ruvsgf" path="res://Sprites/hearts_04.png" id="11_one_heart"]
+[ext_resource type="PackedScene" path="res://Scenes/level_end_ui.tscn" id="12_level_end"]
+[ext_resource type="PackedScene" path="res://Scenes/sugar_cube_lure.tscn" id="13_sugar_lure"]
 
 [node name="main" type="Node2D" unique_id=1174072566]
 script = ExtResource("1_8gbba")
+sugar_cube_lure_scene = ExtResource("13_sugar_lure")
 
 [node name="ObstacleSpawner" parent="." unique_id=1817670738 node_paths=PackedStringArray("horse") instance=ExtResource("2_kry3j")]
 obstacle_scenes = Array[PackedScene]([ExtResource("3_ynf5e")])
@@ -26,8 +29,9 @@ minimum_spawn_time = 0.85
 maximum_spawn_time = 1.4
 initial_spawn_delay = 0.5
 
-[node name="PickupSpawner" parent="." unique_id=1786401372 node_paths=PackedStringArray("horse") instance=ExtResource("4_pickup_spawner")]
-pickup_scenes = Array[PackedScene]([ExtResource("4_hptm8"), ExtResource("5_d1ilt"), ExtResource("6_6iyac")])
+[node name="PickupSpawner" parent="." unique_id=398837250 node_paths=PackedStringArray("horse") instance=ExtResource("4_pickup_spawner")]
+pickup_scenes = Array[PackedScene]([ExtResource("4_hptm8"), ExtResource("6_6iyac")])
+sugar_cube_scene = ExtResource("5_d1ilt")
 horse = NodePath("../player_horse")
 minimum_spawn_time = 3.0
 maximum_spawn_time = 5.5
@@ -39,16 +43,15 @@ position = Vector2(756, 420)
 
 [node name="catch_game" parent="." unique_id=926553982 instance=ExtResource("1_jjgbg")]
 
-[node name="HealthHUD" type="CanvasLayer" parent="." unique_id=576456468]
+[node name="HealthHUD" type="CanvasLayer" parent="." unique_id=854216578]
 layer = 15
 
-[node name="HealthDisplay" type="TextureRect" parent="HealthHUD" unique_id=1781942580 node_paths=PackedStringArray("player_health")]
+[node name="HealthDisplay" type="TextureRect" parent="HealthHUD" unique_id=1346948785 node_paths=PackedStringArray("player_health")]
 texture_filter = 1
 offset_left = 24.0
 offset_top = 24.0
 offset_right = 156.0
 offset_bottom = 72.0
-scale = Vector2(2.1200032, 2)
 texture = ExtResource("8_four_hearts")
 expand_mode = 1
 script = ExtResource("7_health_display")
@@ -57,3 +60,52 @@ three_hearts_texture = ExtResource("9_three_hearts")
 two_hearts_texture = ExtResource("10_two_hearts")
 one_heart_texture = ExtResource("11_one_heart")
 player_health = NodePath("../../player_horse/PlayerHealth")
+
+[node name="StaminaBar" type="ProgressBar" parent="HealthHUD" unique_id=76199198]
+offset_left = 24.0
+offset_top = 82.0
+offset_right = 224.0
+offset_bottom = 108.0
+value = 100.0
+
+[node name="StaminaLabel" type="Label" parent="HealthHUD" unique_id=1834517799]
+offset_left = 24.0
+offset_top = 111.0
+offset_right = 224.0
+offset_bottom = 137.0
+theme_override_font_sizes/font_size = 16
+text = "STAMINA"
+
+[node name="CatchFailuresLabel" type="Label" parent="HealthHUD" unique_id=1101751528]
+offset_left = 24.0
+offset_top = 145.0
+offset_right = 260.0
+offset_bottom = 175.0
+theme_override_font_sizes/font_size = 18
+text = "CATCH FAILS: 0"
+
+[node name="SugarCubeLabel" type="Label" parent="HealthHUD" unique_id=1086710223]
+offset_left = 24.0
+offset_top = 180.0
+offset_right = 260.0
+offset_bottom = 210.0
+theme_override_font_sizes/font_size = 18
+text = "SUGAR CUBE x0"
+
+[node name="IntroHUD" type="CanvasLayer" parent="." unique_id=1616094220]
+layer = 30
+
+[node name="StartLabel" type="Label" parent="IntroHUD" unique_id=457605075]
+visible = false
+offset_left = 339.0
+offset_top = 275.0
+offset_right = 689.0
+offset_bottom = 395.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 64
+text = "START!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LevelEndUI" parent="." unique_id=651165803 instance=ExtResource("12_level_end")]

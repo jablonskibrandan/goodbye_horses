@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://Scripts/sugar_cube_lure.gd" id="1_lure"]
+[ext_resource type="Texture2D" uid="uid://copebe3cac1b2" path="res://Sprites/icon_01.png" id="2_cube"]
+
+[node name="SugarCubeLure" type="Node2D"]
+z_index = 20
+script = ExtResource("1_lure")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(3, 3)
+texture = ExtResource("2_cube")
